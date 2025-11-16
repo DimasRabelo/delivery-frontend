@@ -1,74 +1,78 @@
-# React + TypeScript + Vite
+🚚 DeliveryTech Frontend 💻
+Este repositório contém a aplicação Single Page Application (SPA) desenvolvida em React e TypeScript. 
+Seu objetivo principal é servir como a interface de usuário completa e o cliente de testes para a API de Delivery (o repositório delivery-api).
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A aplicação está em desenvolvimento, mas já inclui a estrutura de autenticação e roteamento necessária para clientes, restaurantes e entregadores.
 
-Currently, two official plugins are available:
+🚀 Tecnologias Utilizadas
+Framework: React (v18+)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Linguagem: TypeScript
 
-## React Compiler
+Roteamento: React Router DOM (v6+)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Gerenciamento de Estado/Sessão: React Context API (Auth, Carrinho, Contador de Pedidos)
 
-## Expanding the ESLint configuration
+Servidor Web no Container: Nginx (para servir a aplicação e roteamento SPA)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Comunicação: fetch ou Axios para consumir endpoints REST (API).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+🛠️ Como Iniciar o Ambiente Completo (API + Frontend)
+Para que esta aplicação React funcione, ela requer o serviço de Backend (delivery-api) em execução. A maneira mais fácil de iniciar a stack completa é usando o Docker Compose, que está configurado no repositório da API.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Estrutura de Pastas Necessária
+É CRÍTICO que o repositório da API e este repositório do Frontend estejam no mesmo diretório de nível superior.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+/seu_diretorio_de_projetos/
+├── delivery-api/        <-- Contém o Docker Compose
+└── delivery-frontend/   <-- ESTE REPOSITÓRIO (Contém o Dockerfile do React)
+2. Clonagem e Inicialização
+Siga estes passos para iniciar o ambiente multi-contêiner:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Clone os Repositórios: (Execute na pasta /seu_diretorio_de_projetos/):
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Bash
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# delivery-frontend
+git clone [https://docs.github.com/pt/rest delivery-api](https://github.com/DimasRabelo/delivery-api.git)
+
+git clone https://www.teses.usp.br/ delivery-frontend
+Inicie os Serviços: Vá para a pasta da API e inicie a orquestração.
+
+Bash
+
+cd delivery-api
+docker compose up --build -d
+Resultado: O Docker Compose construirá a API Java, o Frontend React/Nginx, iniciará o MySQL e o Redis. A aplicação estará acessível em: http://localhost.
+
+🧭 Roteamento e Funcionalidades (SPA)
+A aplicação utiliza roteamento baseado em permissões (Role-Based Access Control - RBAC) e está configurada para lidar com os desafios típicos de Single Page Applications (SPA).
+
+1. Roteamento de Perfil
+O projeto usa Guards de Rota para direcionar os usuários para suas áreas específicas imediatamente após o login:
+
+/entregador/painel: Protegida via EntregadorRoute.
+
+/admin/pedidos: Protegida via RestauranteRoute.
+
+/meus-pedidos, /meu-perfil, etc.: Protegidas via ProtectedRoute (apenas logado).
+
+2. Correção UX (Botão Voltar/F5)
+Para garantir uma navegação fluida para usuários logados, a rota principal (/) utiliza o componente RoleRoute. Este componente:
+
+Impede o Redirecionamento: Resolve problemas de recarregamento (F5) e o botão Voltar que levavam o usuário logado para a Home Page do cliente.
+
+Redireciona: Se o usuário é um Entregador ou Restaurante, ele é imediatamente redirecionado para seu painel de acesso (/entregador/painel ou /admin/pedidos), garantindo que a Home Page (vista na imagem) só seja acessada por clientes ou usuários deslogados.
+
+⚙️ Estrutura do Projeto (TypeScript/React)
+Esta é a estrutura de pastas do projeto (utilize esta seção para referência rápida):
+
+Plaintext
+
+📦src
+ ┣ 📂components      <-- Componentes reutilizáveis e as Guardas de Rota (RoleRoute, ProtectedRoute)
+ ┣ 📂context         <-- Provedores de estado global (Auth, Cart, PedidoCount)
+ ┣ 📂hooks           <-- Hooks customizados (useAuth, useCart)
+ ┣ 📂pages           <-- Componentes de página (rotas)
+ ┣ 📜App.tsx         <-- Configuração central de rotas
+ ┣ 📜main.tsx        <-- Inicialização do React (inclui BrowserRouter)
+ ┗ 📜...

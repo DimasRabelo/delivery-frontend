@@ -78,6 +78,28 @@ O projeto usa Guards de Rota para direcionar os usuários para suas áreas espec
 
 /meus-pedidos, /meu-perfil, etc.: Protegidas via ProtectedRoute (apenas logado).
 
+<h2>🔑 Dados de Acesso Padrão (Senha: 123456)</h2>
+
+O ambiente Docker é inicializado com os seguintes usuários para testes e desenvolvimento.
+
+O ambiente Docker é inicializado com os seguintes usuários para testes e desenvolvimento.
+
+Inteligência de Login: Para todos os perfis, exceto Restaurante, a aplicação detecta automaticamente a Role após o login e redireciona o usuário para o painel correto (ADMIN, CLIENTE, ENTREGADOR). A autenticação do Restaurante é tratada em um endpoint/página separado para fins de segregação.
+
+Nota: A senha padrão para todos os usuários listados abaixo é 123456 (armazenada via hash BCrypt).
+```
+| Usuário                        | E-mail                            Role |
+
+| Administrador |             admin@delivery.com                   | ADMIN |
+| Cliente|                     joao@email.com                      | CLIENTE |
+| Cliente Secundário |        maria@email.com                      | CLIENTE |
+| Restaurante Padrão |        pizza@palace.com                    | RESTAURANTE |
+| Restaurante Secundário |     burger@king.com                    | RESTAURANTE |
+| Entregador |                carlos@entrega.com                  | ENTREGADOR  |
+```
+⚠️ Observação: O Painel do Administrador (admin@delivery.com) ainda está em fase de implementação. Você conseguirá logar com sucesso, mas a página correspondente (a view) estará em branco ou incompleta.
+
+
 <h2>⚙️ Estrutura do Projeto (TypeScript/React)</h2>
 
 Esta é a estrutura de pastas do projeto (utilize esta seção para referência rápida):

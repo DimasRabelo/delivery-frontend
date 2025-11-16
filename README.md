@@ -34,7 +34,7 @@ Para que esta aplicação React funcione, ela requer o serviço de Backend (deli
 1. Estrutura de Pastas Necessária
    
 É CRÍTICO que o repositório da API e este repositório do Frontend estejam no mesmo diretório de nível superior.
-
+```
 /seu_diretorio_de_projetos/
 ├── delivery-api/        <-- Contém o Docker Compose
 └── delivery-frontend/   <-- ESTE REPOSITÓRIO (Contém o Dockerfile do React)
@@ -44,7 +44,7 @@ Siga estes passos para iniciar o ambiente multi-contêiner:
 
 Clone os Repositórios: (Execute na pasta /seu_diretorio_de_projetos/):
 
-```bash
+
 # Execute na sua pasta raiz de projetos
 git clone https://github.com/DimasRabelo/delivery-api.git
 git clone https://github.com/DimasRabelo/delivery-frontend.git
